@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match Learning Game</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .game-container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .card {
+            aspect-ratio: 3/4;
+            background: #2563eb;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            perspective: 1000px;
+        }
+        .card.flipped {
+            transform: rotateY(180deg);
+            background: white;
+            color: #1e40af;
+            border: 2px solid #2563eb;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        .btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+        }
+        .btn:hover {
+            background: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <div class="stats">
+            <div>Matches: <span id="matches">0</span></div>
+            <div>Attempts: <span id="attempts">0</span></div>
+            <div>Time: <span id="time">0:00</span></div>
+        </div>
+        <div class="game-board" id="gameBoard"></div>
+        <button class="btn" id="newGame">New Game</button>
+    </div>
+
+    <script>
+        class MemoryGame {
+            constructor() {
+                this.cards = [];
+                this.matches = 0;
+                this.attempts = 0;
+                this.flippedCards = [];
+                this.timer = 0;
+                this.timerInterval = null;
+                this.isLocked = false;
+
+                this.gameBoard = document.getElementById('gameBoard');
+                this.matchesDisplay = document.getElementById('matches');
+                this.attemptsDisplay = document.getElementById('attempts');
+                this.timeDisplay = document.getElementById('time');
+                this.newGameBtn = document.getElementById('newGame');
+
+                this.newGameBtn.addEventListener('click', () => this.startNewGame());
+                this.startNewGame();
+            }
+
+            async startNewGame() {
+                // Fetch questions from the backend
+                try {
+                    const response = await fetch('http://localhost:8000/get-game-quiz/memory-match');
+                    const data = await response.json();
+                    this.setupGame(data.questions);
+                } catch (error) {
+                    console.error('Error fetching questions:', error);
+                    // Fallback to default pairs if API fails
+                    this.setupGame([
+                        { question: "2 + 2", answer: "4" },
+                        { question: "5 x 5", answer: "25" },
+                        { question: "10 ÷ 2", answer: "5" },
+                        { question: "3 x 4", answer: "12" },
+                        { question: "15 - 7", answer: "8" },
+                        { question: "6 + 6", answer: "12" }
+                    ]);
+                }
+            }
+
+            setupGame(questions) {
+                this.resetGame();
+                this.createCards(questions);
+                this.startTimer();
+            }
+
+            resetGame() {
+                this.matches = 0;
+                this.attempts = 0;
+                this.flippedCards = [];
+                this.isLocked = false;
+                this.gameBoard.innerHTML = '';
+                this.updateStats();
+                if (this.timerInterval) clearInterval(this.timerInterval);
+                this.timer = 0;
+            }
+
+            createCards(questions) {
+                this.cards = [];
+                questions.forEach(pair => {
+                    this.cards.push(
+                        { content: pair.question, type: 'question', matched: false },
+                        { content: pair.answer, type: 'answer', matched: false }
+                    );
+                });
+                this.shuffleCards();
+                this.renderCards();
+            }
+
+            shuffleCards() {
+                for (let i = this.cards.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [this.cards[i], this.cards[j]] = [this.cards[j], this.cards[i]];
+                }
+            }
+
+            renderCards() {
+                this.cards.forEach((card, index) => {
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'card';
+                    cardElement.dataset.index = index;
+                    cardElement.addEventListener('click', () => this.flipCard(index));
+                    this.gameBoard.appendChild(cardElement);
+                });
+            }
+
+            flipCard(index) {
+                if (this.isLocked) return;
+                if (this.flippedCards.length === 2) return;
+                if (this.cards[index].matched) return;
+                if (this.flippedCards.includes(index)) return;
+
+                const cardElement = this.gameBoard.children[index];
+                cardElement.textContent = this.cards[index].content;
+                cardElement.classList.add('flipped');
+                this.flippedCards.push(index);
+
+                if (this.flippedCards.length === 2) {
+                    this.attempts++;
+                    this.updateStats();
+                    this.checkMatch();
+                }
+            }
+
+            checkMatch() {
+                const [index1, index2] = this.flippedCards;
+                const card1 = this.cards[index1];
+                const card2 = this.cards[index2];
+
+                this.isLocked = true;
+                setTimeout(() => {
+                    if (
+                        (card1.type === 'question' && card2.type === 'answer') ||
+                        (card1.type === 'answer' && card2.type === 'question')
+                    ) {
+                        this.matches++;
+                        card1.matched = true;
+                        card2.matched = true;
+                    } else {
+                        const cardElements = this.gameBoard.children;
+                        cardElements[index1].textContent = '';
+                        cardElements[index2].textContent = '';
+                        cardElements[index1].classList.remove('flipped');
+                        cardElements[index2].classList.remove('flipped');
+                    }
+
+                    this.flippedCards = [];
+                    this.isLocked = false;
+                    this.updateStats();
+                    this.checkWin();
+                }, 1000);
+            }
+
+            checkWin() {
+                if (this.matches === this.cards.length / 2) {
+                    clearInterval(this.timerInterval);
+                    setTimeout(() => {
+                        alert(`Congratulations! You won in ${this.attempts} attempts and ${this.formatTime(this.timer)}!`);
+                    }, 500);
+                }
+            }
+
+            startTimer() {
+                this.timerInterval = setInterval(() => {
+                    this.timer++;
+                    this.timeDisplay.textContent = this.formatTime(this.timer);
+                }, 1000);
+            }
+
+            formatTime(seconds) {
+                const minutes = Math.floor(seconds / 60);
+                const remainingSeconds = seconds % 60;
+                return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+            }
+
+            updateStats() {
+                this.matchesDisplay.textContent = this.matches;
+                this.attemptsDisplay.textContent = this.attempts;
+            }
+        }
+
+        // Start the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new MemoryGame();
+        });
+    </script>
+</body>
+</html>

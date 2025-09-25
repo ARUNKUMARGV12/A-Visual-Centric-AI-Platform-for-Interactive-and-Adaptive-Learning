@@ -1,0 +1,285 @@
+/* General Styles for Voice Assistant Page */
+.voice-assistant-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+    color: #333;
+}
+
+.voice-assistant-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 800px;
+}
+
+.voice-assistant-header h1 {
+    margin: 0 0 10px 0;
+    font-size: 2.5em;
+}
+
+.voice-assistant-header p {
+    margin: 0;
+    font-size: 1.1em;
+}
+
+.voice-interaction-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 600px;
+}
+
+.mic-button {
+    background-color: #28a745; /* Green */
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.2em;
+    border-radius: 50px; /* More rounded */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.mic-button:hover {
+    background-color: #218838; /* Darker green */
+    transform: translateY(-2px);
+}
+
+.mic-button.listening {
+    background-color: #dc3545; /* Red when listening */
+    animation: pulse 1.5s infinite;
+}
+
+.mic-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(220, 53, 69, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 53, 69, 0);
+    }
+}
+
+.status-messages {
+    text-align: center;
+    width: 100%;
+}
+
+#status-message {
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 10px;
+    min-height: 20px; /* Reserve space */
+}
+
+.error-text {
+    color: #dc3545; /* Red for errors */
+    font-weight: bold;
+}
+
+.transcripts-area {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 800px;
+    margin-bottom: 30px;
+}
+
+.transcript-section,
+.response-section {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.transcript-section h2,
+.response-section h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    color: #007bff;
+}
+
+.transcript-section p,
+.response-section p {
+    margin: 0;
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #444;
+}
+
+.voice-assistant-footer {
+    text-align: center;
+    margin-top: auto; /* Pushes footer to the bottom if content is short */
+    padding: 15px;
+    font-size: 0.9em;
+    color: #777;
+    width: 100%;
+    max-width: 800px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .voice-assistant-header h1 {
+        font-size: 2em;
+    }
+    .voice-assistant-header p {
+        font-size: 1em;
+    }
+    .mic-button {
+        padding: 12px 25px;
+        font-size: 1.1em;
+    }
+    .transcript-section h2,
+    .response-section h2 {
+        font-size: 1.3em;
+    }
+    .transcript-section p,
+    .response-section p {
+        font-size: 1em;
+    }
+}
+.conversation-log-area {
+    max-height: 400px; 
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #f9f9f9;
+}
+
+.message-bubble {
+    padding: 8px;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    max-width: 80%;
+}
+
+.message-bubble.user {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin-left: auto;
+}
+
+.message-bubble.assistant {
+    background-color: #fff;
+    border: 1px solid #eee;
+    align-self: flex-start;
+    margin-right: auto;
+}
+
+.feedback-section {
+    margin-top: 5px;
+    padding-top: 5px;
+    border-top: 1px dashed #eee;
+}
+
+.feedback-input {
+    width: calc(100% - 120px);
+    padding: 5px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.feedback-submit-button {
+    padding: 5px 10px;
+    border: none;
+    background-color: #5cb85c;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.feedback-submit-button:hover {
+    background-color: #4cae4c;
+}
+.submitted-feedback {
+    font-size: 0.9em;
+    color: #555;
+    margin-top: 3px;
+}
+.save-chat-button {
+    margin-left: 10px;
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.save-chat-button:hover {
+    background-color: #0056b3;
+}
+.code-block {
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    margin-top: 5px;
+    white-space: pre-wrap;
+}
+.code-explanation {
+    font-style: italic;
+    color: #333;
+    margin-top: 3px;
+    background-color: #eef;
+    padding: 5px;
+    border-radius: 3px;
+}
+.global-feedback-area {
+    display: flex;
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+.global-feedback-input {
+    flex-grow: 1;
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.global-feedback-button {
+    padding: 8px 15px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.global-feedback-button:hover {
+    background-color: #5a6268;
+}
+.mic-button.processing {
+    background-color: #ffc107; /* Example: Yellow when processing, not actively listening but conversation is on */
+}

@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Global theme styles */
+@layer base {
+  body, html {
+    @apply min-h-screen transition-colors duration-300;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  }
+
+  /* Light theme */
+  body.theme-light {
+    @apply bg-light-bg text-light-text-primary;
+  }
+
+  /* Dark theme */
+  body.theme-dark {
+    @apply bg-dark-bg text-dark-text-primary;
+  }
+
+  /* Forest theme */
+  body.theme-forest {
+    @apply bg-forest-bg text-forest-text-primary;
+  }
+
+  /* Sunset theme */
+  body.theme-sunset {
+    @apply bg-sunset-bg text-sunset-text-primary;
+  }
+
+  /* Purple theme */
+  body.theme-purple {
+    @apply bg-purple-bg text-purple-text-primary;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold;
+  }
+
+  a {
+    @apply no-underline;
+  }
+
+  input, textarea, select {
+    @apply rounded px-3 py-2;
+  }
+
+  button {
+    @apply transition-all duration-200;
+  }
+}
+
+@layer components {
+  /* Theme-aware components */
+  .themed-sidebar {
+    @apply border-r;
+  }
+
+  .theme-light .themed-sidebar {
+    @apply bg-light-sidebar border-light-border;
+  }
+
+  .theme-dark .themed-sidebar {
+    @apply bg-dark-sidebar border-dark-border;
+  }
+
+  .theme-forest .themed-sidebar {
+    @apply bg-forest-sidebar border-forest-border;
+  }
+
+  .theme-sunset .themed-sidebar {
+    @apply bg-sunset-sidebar border-sunset-border;
+  }
+
+  .theme-purple .themed-sidebar {
+    @apply bg-purple-sidebar border-purple-border;
+  }
+
+  .themed-card {
+    @apply rounded-lg shadow-lg p-4;
+  }
+
+  .theme-light .themed-card {
+    @apply bg-light-card border border-light-border shadow-custom-light;
+  }
+
+  .theme-dark .themed-card {
+    @apply bg-dark-card border border-dark-border shadow-custom-dark;
+  }
+
+  .theme-forest .themed-card {
+    @apply bg-forest-card border border-forest-border shadow-custom-dark;
+  }
+
+  .theme-sunset .themed-card {
+    @apply bg-sunset-card border border-sunset-border shadow-custom-dark;
+  }
+
+  .theme-purple .themed-card {
+    @apply bg-purple-card border border-purple-border shadow-custom-dark;
+  }
+
+  .btn {
+    @apply px-4 py-2 rounded font-medium transition-colors duration-200;
+  }
+
+  .btn-primary {
+    @apply text-white shadow-md;
+  }
+
+  .theme-light .btn-primary {
+    @apply bg-light-accent-primary hover:bg-green-600;
+  }
+
+  .theme-dark .btn-primary {
+    @apply bg-dark-accent-primary hover:bg-green-600;
+  }
+
+  .theme-forest .btn-primary {
+    @apply bg-forest-accent-primary hover:bg-green-600;
+  }
+
+  .theme-sunset .btn-primary {
+    @apply bg-sunset-accent-primary hover:bg-orange-600;
+  }
+
+  .theme-purple .btn-primary {
+    @apply bg-purple-accent-primary hover:bg-purple-600;
+  }
+}
+
+/* Responsive Utilities */
+@layer utilities {
+  .responsive-container {
+    @apply w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+}

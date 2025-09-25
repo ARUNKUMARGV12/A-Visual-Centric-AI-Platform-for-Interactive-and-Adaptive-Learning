@@ -1,0 +1,123 @@
+footer {
+    color: yellow;
+}
+
+/* Modern, expensive game look */
+.canvas {
+    width: 100%;
+    height: 500px;
+    border: none;
+    background: linear-gradient(135deg, #232526 0%, #414345 100%);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 24px;
+    position: relative;
+    padding: 0%;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.ballon {
+    position: absolute;
+    width: 60px;
+    height: 100px;
+    margin: 0%;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25), 0 0 0 4px rgba(255,255,255,0.1);
+    transition: transform 0.1s;
+}
+.ballon:hover {
+    transform: scale(1.08) rotate(-2deg);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), 0 0 0 6px rgba(255,255,255,0.18);
+}
+.ballon-red {
+    background: radial-gradient(circle at 30% 30%, #ff5f6d 60%, #d7263d 100%);
+}
+.ballon-yellow {
+    background: radial-gradient(circle at 30% 30%, #fff200 60%, #f7971e 100%);
+}
+.ballon-green {
+    background: radial-gradient(circle at 30% 30%, #43e97b 60%, #38f9d7 100%);
+}
+
+.dhaga {
+    height: 125px;
+    width: 2px;
+    margin: 0px;
+    border-left: 2px dashed #fff;
+    position: inherit;
+    top: 98px;
+    left: 30px;
+    opacity: 0.7;
+}
+
+.yesno-question-box {
+    background: rgba(34, 40, 49, 0.92);
+    color: #ffe066;
+    /* gold/yellow for main question */
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    padding: 18px 24px 10px 24px;
+    border: 2px solid #43e97b;
+    letter-spacing: 0.5px;
+}
+
+.yesno-score {
+    background: rgba(67, 233, 123, 0.12);
+    border: 2px solid #43e97b;
+    color: #ffb347;
+    /* orange for score text */
+    box-shadow: 0 2px 12px rgba(67,233,123,0.12);
+}
+
+.yesno-score .font-weight-bold {
+    color: #ffe066;
+    /* gold for 'Score Card' heading */
+}
+
+.yesno-score .text-primary {
+    color: #43e97b !important;
+    /* green for score number */
+}
+
+.yesno-attempt-log {
+    background: rgba(34, 40, 49, 0.92);
+    color: #7fd8ff;
+    /* light blue for previous questions */
+    border: 2px solid #f7971e;
+    box-shadow: 0 2px 12px rgba(247,151,30,0.12);
+}
+
+.yesno-attempt-log .font-weight-bold {
+    color: #00c3ff;
+    /* cyan for 'Previously Attempted' heading */
+}
+
+.yesno-attempt-log .bg-success {
+    background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%) !important;
+    color: #fff !important;
+}
+.yesno-attempt-log .bg-danger {
+    background: linear-gradient(90deg, #ff5f6d 0%, #d7263d 100%) !important;
+    color: #fff !important;
+}
+
+.yesno-legend {
+    background: rgba(34, 40, 49, 0.92);
+    color: #fff;
+    border-radius: 12px;
+    border: 2px solid #fff200;
+    box-shadow: 0 2px 12px rgba(255,242,0,0.12);
+    padding: 8px 24px;
+    font-size: 1.1rem;
+}
+
+.navbar {
+    border-radius: 0 0 18px 18px;
+    box-shadow: 0 2px 12px rgba(67,233,123,0.12);
+}
+
+body {
+    background: linear-gradient(120deg, #232526 0%, #414345 100%);
+    min-height: 100vh;
+}

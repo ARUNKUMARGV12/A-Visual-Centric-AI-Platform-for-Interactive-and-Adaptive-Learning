@@ -1,0 +1,249 @@
+/* src/components/Sidebar.css */
+
+/* CSS Variables for easier theming */
+:root {
+    --sidebar-bg: #f8f9fa; /* Lighter background */
+    --sidebar-text-color: #343a40; /* Darker text for light bg */
+    --sidebar-hover-bg: #e9ecef;
+    --sidebar-active-bg: #dee2e6;
+    --sidebar-border-color: #ced4da;
+    --primary-accent-color: #007bff; /* Perplexity-like blue */
+    --primary-accent-hover-color: #0056b3;
+    --sidebar-width: 260px;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--sidebar-bg);
+    color: var(--sidebar-text-color);
+    display: flex;
+    flex-direction: column;
+    padding: 10px; /* Reduced padding */
+    border-right: 1px solid var(--sidebar-border-color); /* Subtle right border instead of shadow */
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 1000; /* Ensure it's above other content */
+    overflow-y: auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* Common system fonts */
+}
+
+.sidebar-header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align items to the start for a cleaner look */
+    padding-bottom: 10px;
+    margin-bottom: 10px; /* Space after header */
+    border-bottom: 1px solid var(--sidebar-border-color);
+}
+
+.sidebar-logo {
+    margin-bottom: 10px; /* Space below logo */
+    display: flex; /* Align icon and potential text */
+    align-items: center;
+    gap: 8px;
+    color: var(--sidebar-text-color);
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.logo-icon {
+    width: 30px; /* Slightly smaller logo */
+    height: 30px;
+    fill: var(--primary-accent-color); /* Use accent color for logo */
+}
+
+.new-chat-btn {
+    background-color: var(--primary-accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px; /* Slightly more rounded corners */
+    padding: 10px 12px;
+    font-size: 0.95em; /* Slightly smaller font */
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.2s ease-in-out;
+    width: 100%;
+    justify-content: flex-start; /* Align text to start */
+}
+
+.new-chat-btn:hover {
+    background-color: var(--primary-accent-hover-color);
+}
+
+.plus-icon {
+    width: 16px; /* Adjust icon size */
+    height: 16px;
+    fill: white;
+}
+
+.sidebar-nav {
+    flex-grow: 1;
+    padding-top: 0; /* Remove extra padding */
+}
+
+.nav-item,
+.voice-assistant-button { /* Apply similar styling to Link as a button */
+    background: none;
+    border: none;
+    color: var(--sidebar-text-color);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9em;
+    padding: 10px 12px; /* Consistent padding */
+    width: 100%;
+    text-align: left;
+    border-radius: 6px;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+    margin-bottom: 5px; /* Space between nav items */
+    text-decoration: none; /* For Link component */
+}
+
+.nav-item:hover:not(.active),
+.voice-assistant-button:hover:not(.active) {
+    background-color: var(--sidebar-hover-bg);
+    color: var(--sidebar-text-color); /* Keep text color consistent on hover for light theme */
+}
+
+.nav-item.active,
+.voice-assistant-button.active { /* Assuming you might add 'active' class to Link too */
+    background-color: var(--sidebar-active-bg);
+    color: var(--primary-accent-color); /* Active item text using accent color */
+    font-weight: 600; /* Bolder active item */
+}
+
+/* Style for the Link to make it look like a button if needed or ensure consistency */
+.voice-assistant-button {
+    /* Inherits most from .nav-item, add specific overrides if needed */
+    /* For example, if you want it to look distinct: */
+    /* background-color: var(--some-other-color); */
+}
+
+
+.sidebar-library {
+    margin-top: 15px; /* Adjusted margin */
+}
+
+.library-header {
+    font-size: 0.8em; /* Smaller header */
+    color: #6c757d; /* Muted text color for section headers */
+    padding: 0 12px 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px; /* Increased letter spacing */
+    font-weight: 500;
+}
+
+.chat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.chat-item {
+    background: none;
+    color: var(--sidebar-text-color);
+    padding: 8px 12px; /* Slightly reduced padding */
+    cursor: pointer;
+    font-size: 0.85em; /* Smaller chat item font */
+    border-radius: 6px;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.chat-item:hover:not(.active) {
+    background-color: var(--sidebar-hover-bg);
+    color: var(--sidebar-text-color);
+}
+
+.chat-item.active {
+    background-color: var(--sidebar-active-bg);
+    color: var(--primary-accent-color);
+    font-weight: 500; /* Slightly less bold than nav-item active */
+}
+
+.no-chats {
+    color: #6c757d; /* Muted text for no chats */
+    padding: 10px 15px;
+    font-size: 0.85em;
+    text-align: center;
+    font-style: italic;
+}
+
+.sidebar-footer {
+    padding: 10px 12px; /* Consistent padding */
+    border-top: 1px solid var(--sidebar-border-color);
+    margin-top: auto;
+}
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Reduced gap */
+    color: var(--sidebar-text-color);
+    padding: 5px 0;
+}
+
+.user-icon {
+    font-size: 1.1em;
+    color: #495057; /* Slightly different icon color */
+}
+
+.user-email {
+    font-size: 0.85em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Styles for VoiceAssistantLink - it's already covered by .voice-assistant-button */
+/* The Link component in sidebar.js has className="voice-assistant-button" */
+/* So it will pick up the styles from .voice-assistant-button defined above. */
+
+/* Example of how to make sidebar collapsible (JS would be needed to toggle 'collapsed' class) */
+/*
+.sidebar.collapsed {
+    width: 60px;
+}
+.sidebar.collapsed .sidebar-logo span,
+.sidebar.collapsed .new-chat-btn span:not(.plus-icon),
+.sidebar.collapsed .nav-item span:not([role="img"]),
+.sidebar.collapsed .library-header,
+.sidebar.collapsed .chat-item,
+.sidebar.collapsed .user-email {
+    display: none;
+}
+
+.sidebar.collapsed .new-chat-btn .plus-icon {
+    margin-right: 0;
+}
+.sidebar.collapsed .sidebar-header,
+.sidebar.collapsed .new-chat-btn,
+.sidebar.collapsed .nav-item,
+.sidebar.collapsed .chat-item {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+*/
+
+/* Remove .pro-label or restyle if needed */
+/*
+.pro-label {
+    background-color: var(--primary-accent-color);
+    color: white;
+    font-size: 0.6em;
+    padding: 2px 5px;
+    border-radius: 4px;
+    font-weight: bold;
+    margin-left: auto;
+}
+*/

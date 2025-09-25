@@ -1,0 +1,876 @@
+/* chat.css - Perplexity-like UI */
+
+/* CSS Variables for easier theming */
+:root {
+    --app-bg: #1A1A1A; /* Overall application background - changed to dark theme */
+    --chat-bg: #1A1A1A; /* Chat area background - changed to dark theme */
+    --text-color: #D1D5DB; /* Primary text color changed to light for dark mode */
+    --secondary-text-color: #A1A1AA; /* For less prominent text */
+    --border-color: #2D2D2D; /* Darker border for dark theme */
+    --input-bg: #2D2D2D; /* Background for input fields - darker for dark theme */
+    --input-border-color: #3A3A3A; /* Darker border for inputs */
+    --input-focus-border-color: #3B82F6; /* Blue accent for focus */
+    --primary-accent-color: #3B82F6; /* Accent blue color */
+    --primary-accent-hover-color: #2563EB;
+
+    --user-message-bg: #1E40AF; /* Darker blue for user messages */
+    --user-message-text: #E5E7EB; /* Light text for dark backgrounds */
+    --assistant-message-bg: #2D2D2D; /* Dark grey for assistant messages */
+    --assistant-message-text: #E5E7EB; /* Light text for readability */
+
+    --link-color: #3B82F6; /* Blue links */
+    --code-bg: #1F2937; /* Darker background for code */
+    --code-text-color: #E5E7EB; /* Light text for code */
+
+    --sidebar-width: 260px; /* Sidebar width */
+}
+
+/* Overall App Structure */
+body {
+  margin: 0;
+  background-color: var(--app-bg);
+  color: var(--text-color);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.chat-section {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  /* The main content area, to the right of the sidebar */
+  margin-left: var(--sidebar-width); /* Adjust if sidebar width changes */
+  width: calc(100% - var(--sidebar-width)); /* Adjust if sidebar width changes */
+  background-color: var(--chat-bg);
+  color: var(--text-color);
+  overflow: hidden;
+  padding-top: 0; /* Remove if header is part of this section */
+}
+
+/* Header adjustments (assuming header.js is used within chat-section) */
+/* If you have a global header component, its styles would go here or in its own CSS file */
+/* .chat-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--app-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+} */
+
+.chat-container-wrapper {
+  width: 100%;
+  max-width: 900px; /* Increased from original value for wider chat */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: calc(100vh - 120px); /* Adjust for header and padding */
+  
+}
+
+/* Chat history area styling */
+.chat-history {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 10px;
+  background-color: transparent; /* Ensure consistency with dark theme */
+  border-radius: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%; /* Ensure it takes full width of parent */
+  max-width: 800px; /* Set maximum width for better readability */
+  margin-bottom: 200px;
+  margin: 0 auto; /* Center in parent container */
+}
+
+.placeholder-text {
+  display: flex;
+  flex-direction: column; /* Allow for icon and text */
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 1.1em;
+  color: var(--secondary-text-color);
+  text-align: center;
+}
+.placeholder-text svg { /* If you add an icon */
+  font-size: 3em;
+  margin-bottom: 15px;
+  color: #bdc1c6; /* Lighter icon color */
+}
+
+
+/* Individual Messages */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  /* No specific background, let message itself handle it */
+}
+
+.message {
+  padding: 12px 18px;
+  border-radius: 8px; /* Modern rounded corners */
+  width: fit-content;
+  max-width: 85%; /* Slightly less max-width for better visual separation */
+  word-wrap: break-word;
+  line-height: 1.6;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08); /* Softer shadow */
+  margin-bottom: 5px; /* Space for actions below message */
+}
+
+.message.user {
+  background-color: var(--user-message-bg);
+  color: var(--user-message-text);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px; /* Slightly less rounded on one corner for chat bubble effect */
+}
+
+.message.assistant {
+  background-color: var(--assistant-message-bg);
+  color: var(--assistant-message-text);
+  align-self: flex-start;
+  border: 1px solid var(--border-color);
+  box-shadow: none;
+  border-bottom-left-radius: 4px;
+  width: 100%; /* Ensure message takes full available width */
+}
+
+/* Markdown content styling */
+.message.assistant .formatted-heading {
+  margin-top: 0.8em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  color: var(--text-color); /* Ensure contrast */
+}
+.message.assistant .formatted-h1 { font-size: 1.5em; border-bottom: 1px solid var(--border-color); padding-bottom: 0.2em;}
+.message.assistant .formatted-h2 { font-size: 1.3em; }
+.message.assistant .formatted-h3 { font-size: 1.15em; }
+
+.message.assistant .formatted-paragraph {
+  margin-bottom: 0.7em;
+  color: var(--text-color); /* Main text color */
+}
+
+.message.assistant .formatted-list {
+  padding-left: 20px;
+  margin-bottom: 0.7em;
+}
+
+.message.assistant .formatted-list-item {
+  margin-bottom: 0.4em;
+}
+
+.message.assistant code:not(pre > code) { /* Inline code */
+  background-color: var(--code-bg);
+  color: var(--code-text-color);
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+  font-size: 0.9em;
+  border: 1px solid var(--border-color);
+}
+
+.message.assistant pre {
+  background-color: var(--code-bg);
+  color: var(--code-text-color);
+  padding: 12px 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1em 0; /* More margin around code blocks */
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 0.9em;
+  border: 1px solid var(--border-color);
+}
+
+.message.assistant pre code {
+  white-space: pre; /* Changed from pre-wrap for typical code block behavior */
+  background-color: transparent !important;
+  color: inherit !important;
+  padding: 0 !important;
+  border: none !important; /* Remove inner border */
+  font-size: inherit !important; /* Ensure font size consistency */
+}
+
+/* Loading Indicator */
+.message.typing {
+  color: var(--secondary-text-color);
+  font-style: italic;
+  align-self: flex-start;
+  padding: 10px 15px;
+  background: none;
+  box-shadow: none;
+}
+
+/* Tabs for Answer/Sources */
+.tabs {
+  display: flex;
+  margin-top: 10px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+  padding: 8px 12px;
+  cursor: pointer;
+  border: none;
+  background-color: var(--assistant-message-bg);
+  color: var(--secondary-text-color);
+  font-size: 0.9em;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  margin-right: 8px;
+  transition: color 0.2s ease, border-bottom-color 0.2s ease;
+}
+
+.tab-btn.active {
+  color: var(--primary-accent-color);
+  border-bottom-color: var(--primary-accent-color);
+  background-color: var(--assistant-message-bg);
+}
+
+.tab-btn:hover:not(.active) {
+  color: var(--text-color);
+}
+
+.tab-content {
+  padding-top: 8px;
+  display: block; /* Ensure content displays below tabs */
+  width: 100%; /* Take full width */
+  clear: both; /* Ensure it's below the tabs */
+  background-color: var(--assistant-message-bg); /* Match message background */
+  color: var(--assistant-message-text); /* Ensure text is visible */
+}
+
+/* Additional styles for ReactMarkdown content in assistant messages */
+.message.assistant .markdown-content {
+  background-color: var(--assistant-message-bg);
+  color: var(--text-color);
+}
+
+.message.assistant .markdown-content p,
+.message.assistant .markdown-content h1,
+.message.assistant .markdown-content h2,
+.message.assistant .markdown-content h3,
+.message.assistant .markdown-content h4,
+.message.assistant .markdown-content h5,
+.message.assistant .markdown-content h6,
+.message.assistant .markdown-content ul,
+.message.assistant .markdown-content ol,
+.message.assistant .markdown-content li,
+.message.assistant .markdown-content blockquote,
+.message.assistant .markdown-content table,
+.message.assistant .markdown-content pre {
+  color: var(--assistant-message-text); /* Ensure all markdown content is visible */
+}
+
+/* Message tabs container - ensure proper wrapping */
+.message-meta {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--assistant-message-bg); /* Match message background */
+}
+
+.message-meta .tabs {
+  flex-wrap: wrap; /* Allow wrapping for smaller screens */
+  gap: 4px; /* Add gap between wrapped items */
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+}
+
+/* Action Buttons (Like, Dislike, Share, etc.) under messages */
+.action-buttons {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Reduced gap */
+  margin-top: 8px; /* Space from message content */
+  padding-left: 0;
+  /* Align with the message itself, handle in JS or by message structure */
+}
+
+.action-btn { /* General style for icon buttons */
+  background-color: transparent;
+  border: none;
+  border-radius: 50%; /* Circular buttons for icons */
+  padding: 6px; /* Adjust for icon size */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-text-color);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 0.9em; /* For text next to icon if any */
+}
+
+.action-btn svg { /* Assuming react-icons */
+    font-size: 1.1em; /* Adjust icon size */
+}
+
+.action-btn:hover {
+  background-color: var(--input-bg); /* Light hover for icon buttons */
+  color: var(--text-color);
+}
+
+.action-btn.active,
+.action-btn.liked, /* Specific classes for liked/disliked */
+.action-btn.disliked {
+  color: var(--primary-accent-color);
+  /* background-color: #e1f0ff; /* Optional subtle background for active state */
+}
+
+.show-code-btn { /* This button opens the CodeCanvas */
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 14px;
+  cursor: pointer;
+  font-size: 0.85em;
+  font-weight: 500;
+  margin-top: 10px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.show-code-btn:hover {
+  background-color: #e8eaed; /* Slightly darker hover */
+  border-color: #cdd1d5;
+}
+
+
+/* Input Area - Central to Perplexity UI */
+.input-container {
+  padding: 15px 20px; /* Generous padding around the input form */
+  background-color: var(--app-bg); /* Or var(--chat-bg) if preferred */
+  border-top: 1px solid var(--border-color);
+  /* Positioned at the bottom of .chat-section */
+  margin-top: auto;
+}
+
+.input-form {
+  display: flex;
+  align-items: center; /* Align items vertically, esp. if input is multiline */
+  gap: 10px;
+  background-color: var(--app-bg); /* Input bar takes app background */
+  border-radius: 28px; /* More rounded for modern feel */
+  padding: 8px 8px 8px 20px; /* Padding inside the input bar */
+  border: 1px solid var(--input-border-color);
+  box-shadow: 0 1px 6px rgba(32,33,36,0.08); /* Subtle shadow like Perplexity */
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.input-form:focus-within {
+  border-color: var(--input-focus-border-color);
+  box-shadow: 0 1px 6px rgba(32,33,36,0.18); /* More prominent shadow on focus */
+}
+
+.search-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  background-color: transparent;
+  color: var(--text-color);
+  font-size: 1em; /* Standard font size */
+  padding: 8px 0; /* Vertical padding for the input text itself */
+  resize: none; /* If it's a textarea */
+  max-height: 120px; /* Allow for a few lines of text */
+  overflow-y: auto; /* Scroll if more text */
+}
+
+.search-input::placeholder {
+  color: var(--secondary-text-color);
+  opacity: 0.8;
+}
+
+/* Input Actions (Attach, Voice, etc.) inside the input bar */
+.input-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px; /* Smaller gap for action icons */
+}
+
+/* Styling for .action-btn inside .input-actions if different */
+.input-actions .action-btn {
+  padding: 8px; /* Slightly larger for touch targets if these are primary actions */
+  font-size: 1.2em; /* Make icons slightly larger */
+}
+.input-actions .action-btn:hover {
+    background-color: #e8eaed; /* Consistent hover */
+}
+
+
+.submit-btn {
+  background-color: var(--primary-accent-color);
+  color: white;
+  border: none;
+  border-radius: 50%; /* Circular send button */
+  width: 40px; /* Fixed size */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0; /* Prevent shrinking */
+}
+
+.submit-btn svg { /* Assuming react-icons */
+    font-size: 1.4em; /* Adjust icon size */
+}
+
+.submit-btn:disabled {
+  background-color: #bdc1c6; /* Muted color for disabled state */
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background-color: var(--primary-accent-hover-color);
+}
+
+.error {
+  color: #d93025; /* Red for errors */
+  font-size: 0.9em;
+  padding: 8px 0;
+  text-align: center;
+}
+
+/* Remaining styles (CodeCanvas, Scrollbar, Media Queries, etc.) will need similar adjustments. */
+/* It's important to maintain consistency in colors, spacing, and component styling. */
+
+/* For example, CodeCanvas styling */
+.code-canvas-container {
+  position: fixed; /* Or absolute, depending on layout */
+  top: 0;
+  right: 0;
+  width: 45%; /* Or a fixed width like 600px */
+  max-width: 700px;
+  height: 100%;
+  background-color: var(--app-bg);
+  border-left: 1px solid var(--border-color);
+  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+  z-index: 1001; /* Above sidebar */
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%); /* Initially hidden */
+  transition: transform 0.3s ease-in-out;
+}
+.code-canvas-container.visible {
+  transform: translateX(0);
+}
+
+.code-canvas {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.code-canvas-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: #f8f9fa; /* Slightly different header bg for canvas */
+}
+
+.code-canvas-title {
+  font-size: 1em;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.canvas-close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5em; /* Larger close icon */
+  color: var(--secondary-text-color);
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1;
+}
+.canvas-close-btn:hover {
+  color: var(--text-color);
+}
+
+.code-block-section {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+.code-block-section:last-child {
+  border-bottom: none;
+}
+
+.code-block-section pre.code-content { /* Matches message pre style */
+  background-color: var(--code-bg);
+  color: var(--code-text-color);
+  padding: 12px 15px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 0 0 10px 0; /* Margin only at bottom */
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 0.9em;
+  border: 1px solid var(--border-color);
+}
+.code-block-section pre.code-content code {
+  /* Styles inherited or can be specified if different from chat messages */
+}
+
+.code-canvas-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.canvas-btn {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.85em;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.canvas-btn:hover {
+  background-color: #e8eaed;
+  border-color: #cdd1d5;
+}
+.canvas-btn span { /* For emojis */
+  font-size: 1em; /* Adjust if emojis are too small/large */
+}
+
+.code-editor {
+    /* Styles for the editing view in code canvas */
+}
+.code-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--input-border-color);
+  border-radius: 6px;
+  font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 0.9em;
+  background-color: var(--app-bg); /* or var(--code-bg) */
+  color: var(--text-color);
+  resize: vertical;
+  min-height: 150px;
+  margin-bottom: 10px;
+}
+.code-textarea:focus {
+  outline: none;
+  border-color: var(--input-focus-border-color);
+  box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2); /* Focus ring */
+}
+.editor-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end; /* Align save/cancel to the right */
+}
+.editor-buttons .canvas-btn.cancel-btn {
+    background-color: transparent;
+    border-color: transparent;
+}
+.editor-buttons .canvas-btn.cancel-btn:hover {
+    background-color: var(--input-bg); /* Gentle hover for cancel */
+    color: var(--secondary-text-color);
+}
+
+
+/* Scrollbar Styling (Webkit) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--input-bg); /* Light track */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb {
+  background: #bdc1c6; /* Grey thumb */
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9aa0a6; /* Darker grey on hover */
+}
+
+
+/* Related Questions Styling */
+.related-questions {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: var(--assistant-message-bg); /* Match assistant message bg */
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+}
+
+.related-questions h3 {
+  font-size: 0.95em;
+  color: var(--secondary-text-color);
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 500;
+  /* If using ::before for an icon:
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  */
+}
+/* .related-questions h3::before {
+  content: '💡'; or an SVG icon
+  font-size: 1.1em;
+} */
+
+.related-questions ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap; /* Allow questions to wrap */
+  gap: 8px;
+}
+
+.related-questions li {
+  margin-bottom: 0; /* Handled by gap on ul */
+}
+
+.related-question-button {
+  background-color: var(--input-bg);
+  color: var(--primary-accent-color);
+  border: 1px solid var(--border-color);
+  border-radius: 16px; /* Pill shape */
+  padding: 6px 12px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+  text-align: left;
+}
+
+.related-question-button:hover {
+  background-color: #e8eaed; /* Light hover */
+  border-color: #cdd1d5;
+  color: var(--primary-accent-hover-color);
+}
+
+/* Voice Button, YouTube Button specific styles in input bar if needed */
+.input-form .voice-btn,
+.input-form .youtube-btn,
+.input-form .attachment-btn { /* Assuming you have an attachment button */
+  /* These will use .input-actions .action-btn styles by default */
+  /* Add specific overrides if they need to look different */
+}
+.input-form .voice-btn.listening {
+  color: var(--primary-accent-color); /* Indicate listening state */
+  background-color: #e1f0ff; /* Subtle background */
+}
+
+/* YouTube videos display adjustments */
+.youtube-videos-container {
+  margin-top: 15px;
+  padding: 10px;
+  background-color: var(--assistant-message-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+.youtube-videos-container h4 {
+  font-size: 0.95em;
+  color: var(--secondary-text-color);
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+.youtube-video-list { /* if you wrap items in a list */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Responsive grid */
+    gap: 10px;
+}
+.youtube-video-item {
+  background-color: var(--app-bg);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  padding: 10px;
+  transition: box-shadow 0.2s;
+}
+.youtube-video-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+.youtube-video-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.youtube-video-thumbnail {
+  width: 100%;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--border-color);
+}
+.youtube-video-title {
+  font-size: 0.9em;
+  color: var(--text-color);
+  font-weight: 500;
+  line-height: 1.3;
+  /* Clamp to 2 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 1200px) { /* Adjust breakpoint for when code canvas might overlap too much */
+    .code-canvas-container {
+        width: 50%;
+    }
+}
+
+@media (max-width: 900px) { /* Tablet and smaller */
+  .chat-section {
+    margin-left: 0; /* Sidebar might be hidden or overlayed */
+    width: 100%;
+  }
+  /* Add styles for a toggleable/overlay sidebar if implementing */
+
+  .chat-container {
+    padding: 15px;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .input-form {
+    padding: 6px 6px 6px 15px;
+  }
+  .search-input {
+    font-size: 0.95em;
+  }
+  .submit-btn {
+    width: 36px;
+    height: 36px;
+  }
+  .submit-btn svg {
+    font-size: 1.2em;
+  }
+
+  .code-canvas-container {
+    width: 80%; /* Take more space on smaller screens */
+    max-width: none;
+    /* Consider making it a modal or full-screen overlay on very small screens */
+  }
+}
+
+@media (max-width: 600px) { /* Mobile */
+  .chat-container {
+    padding: 10px;
+    gap: 15px;
+  }
+  .chat-history {
+    gap: 15px;
+  }
+
+  .message {
+    padding: 10px 15px;
+    font-size: 0.95em;
+  }
+  .message.assistant .formatted-h1 { font-size: 1.3em; }
+  .message.assistant .formatted-h2 { font-size: 1.15em; }
+  .message.assistant .formatted-h3 { font-size: 1.05em; }
+
+
+  .input-container {
+    padding: 10px;
+  }
+  .input-form {
+    /* Allow actions to wrap if needed, or make input scroll horizontally if too many actions */
+  }
+  .input-actions .action-btn {
+    font-size: 1.1em; /* Ensure touch targets are adequate */
+    padding: 7px;
+  }
+
+
+  .tabs {
+    margin-top: 8px;
+    margin-bottom: 6px;
+  }
+  .tab-btn {
+    padding: 7px 10px;
+    font-size: 0.85em;
+  }
+
+  .action-buttons { /* Under message */
+    gap: 4px;
+  }
+  .action-buttons .action-btn svg {
+    font-size: 1em;
+  }
+
+  .related-questions {
+    padding: 8px;
+  }
+  .related-question-button {
+    padding: 5px 10px;
+    font-size: 0.8em;
+  }
+
+  .code-canvas-container {
+      width: 100%; /* Full width on mobile */
+      height: 100%;
+      border-left: none;
+      box-shadow: none;
+      /* Consider how users will close this - ensure close button is very accessible */
+  }
+}
+
+/* Ensure source display from response_srcs.js is styled if not covered by .message.assistant */
+.sources-container { /* Assuming this is the wrapper in Sources.js */
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--border-color); /* Dashed to differentiate from tabs */
+}
+
+.sources-container h4 {
+  font-size: 0.9em;
+  color: var(--secondary-text-color);
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.sources-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.source-item {
+  font-size: 0.85em;
+}
+
+.source-link {
+  color: var(--link-color);
+  text-decoration: none;
+  word-break: break-all; /* Break long URLs */
+}
+
+.source-link:hover {
+  text-decoration: underline;
+}
+
+.source-title { /* If you have titles for sources */
+  font-weight: 500;
+  color: var(--text-color);
+  display: block; /* Make title take full line */
+  margin-bottom: 2px;
+}
